@@ -67,6 +67,14 @@ const MeasurementForm = () => {
   return (
     <Card className="shadow-lg">
       <CardContent className="p-6 space-y-6">
+        <div className="flex justify-center mb-6">
+          <img 
+            src="/workpiece-image.jpg" 
+            alt="ชิ้นงานที่ต้องวัด" 
+            className="w-full max-w-md h-auto rounded-lg shadow-md"
+          />
+        </div>
+        
         <div className="flex items-center space-x-4">
           <label className="w-40 text-lg font-semibold">Traceability code</label>
           <Input
