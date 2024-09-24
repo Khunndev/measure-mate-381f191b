@@ -35,10 +35,13 @@ const MeasurementForm = () => {
   });
 
   const handleInputChange = (section, index, value) => {
-    setMeasurements(prev => ({
-      ...prev,
-      [section]: prev[section].map((v, i) => i === index ? value : v)
-    }));
+    // Only allow numeric input (including decimal point)
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      setMeasurements(prev => ({
+        ...prev,
+        [section]: prev[section].map((v, i) => i === index ? value : v)
+      }));
+    }
   };
 
   const calculateAverage = (section) => {
@@ -73,7 +76,8 @@ const MeasurementForm = () => {
                   <div key={index} className="flex items-center space-x-2">
                     <label className="w-20">จุดที่ {index + 1}</label>
                     <Input
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
                       value={value}
                       onChange={(e) => handleInputChange(section, index, e.target.value)}
                       placeholder="Enter measurement"
