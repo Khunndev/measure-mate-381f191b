@@ -83,7 +83,8 @@ const MeasurementForm = () => {
     <Card className="shadow-lg">
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/2 pr-4 flex items-center justify-center">
+          <div className="md:w-1/2 pr-4 flex flex-col items-center justify-center">
+            <h3 className="text-xl font-semibold mb-4">รูปชิ้นงาน</h3>
             <img 
               src="/workpiece-image.jpg" 
               alt="รูปตรวจชิ้นงาน" 
