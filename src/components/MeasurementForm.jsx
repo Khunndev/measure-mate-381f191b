@@ -83,13 +83,15 @@ const MeasurementForm = () => {
     <Card className="shadow-lg">
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/2 pr-4 flex flex-col items-center justify-center">
-            <h3 className="text-xl font-semibold mb-4">รูปชิ้นงาน</h3>
-            <img 
-              src="/workpiece-image.jpg" 
-              alt="รูปตรวจชิ้นงาน" 
-              className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover"
-            />
+          <div className="md:w-1/2 pr-4 flex flex-col">
+            <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
+            <div className="flex-grow flex items-center justify-center">
+              <img 
+                src="/workpiece-image.jpg" 
+                alt="รูปตรวจชิ้นงาน" 
+                className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover"
+              />
+            </div>
           </div>
           <div className="md:w-1/2 pl-4 space-y-6">
             <div className="flex items-center space-x-4">
