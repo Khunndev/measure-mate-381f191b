@@ -43,6 +43,25 @@ const MeasurementForm = () => {
     }
   };
 
+  const handleInputClick = (section, index) => {
+    setMeasurements(prev => ({
+      ...prev,
+      [section]: prev[section].map((v, i) => i === index ? '' : v)
+    }));
+  };
+
+  const handleKeyDown = (section, index, e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const nextSection = section === 'D1' && index === 3 ? 'D2' : section;
+      const nextIndex = (index + 1) % 4;
+      const nextInput = document.querySelector(`input[name="${nextSection}-${nextIndex}"]`);
+      if (nextInput) {
+        nextInput.focus();
+      }
+    }
+  };
+
   const calculateAverage = (section) => {
     const values = measurements[section].filter(v => v !== '').map(Number);
     return values.length ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : '0.00';
@@ -77,8 +96,11 @@ const MeasurementForm = () => {
                     <Input
                       type="text"
                       inputMode="decimal"
+                      name={`${section}-${index}`}
                       value={value}
                       onChange={(e) => handleInputChange(section, index, e.target.value)}
+                      onClick={() => handleInputClick(section, index)}
+                      onKeyDown={(e) => handleKeyDown(section, index, e)}
                       placeholder="Enter measurement"
                       className="flex-grow"
                     />
