@@ -7,15 +7,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState({
-    D1: Array(4).fill(''),
-    D2: Array(4).fill('')
+    D1: Array(4).fill('0'),
+    D2: Array(4).fill('0')
   });
 
   const queryClient = useQueryClient();
 
   const { data: savedMeasurements } = useQuery({
     queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { D1: Array(4).fill(''), D2: Array(4).fill('') },
+    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { D1: Array(4).fill('0'), D2: Array(4).fill('0') },
   });
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements({ D1: Array(4).fill(''), D2: Array(4).fill('') });
+    setMeasurements({ D1: Array(4).fill('0'), D2: Array(4).fill('0') });
   };
 
   const handleSave = () => {
