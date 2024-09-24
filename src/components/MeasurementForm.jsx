@@ -17,6 +17,7 @@ import {
 
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState({
+    traceabilityCode: '',
     D1: Array(4).fill(''),
     D2: Array(4).fill('')
   });
@@ -27,7 +28,7 @@ const MeasurementForm = () => {
 
   const { data: savedMeasurements } = useQuery({
     queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { D1: Array(4).fill(''), D2: Array(4).fill('') },
+    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { traceabilityCode: '', D1: Array(4).fill(''), D2: Array(4).fill('') },
   });
 
   useEffect(() => {
@@ -47,7 +48,9 @@ const MeasurementForm = () => {
   });
 
   const handleInputChange = (section, index, value) => {
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+    if (section === 'traceabilityCode') {
+      setMeasurements(prev => ({ ...prev, traceabilityCode: value }));
+    } else if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setMeasurements(prev => ({
         ...prev,
         [section]: prev[section].map((v, i) => i === index ? value : v)
@@ -56,18 +59,24 @@ const MeasurementForm = () => {
   };
 
   const handleInputFocus = (section, index) => {
-    setMeasurements(prev => ({
-      ...prev,
-      [section]: prev[section].map((v, i) => i === index ? '' : v)
-    }));
+    if (section !== 'traceabilityCode') {
+      setMeasurements(prev => ({
+        ...prev,
+        [section]: prev[section].map((v, i) => i === index ? '' : v)
+      }));
+    }
   };
 
   const handleKeyDown = (section, index, e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (section === 'D2' && index === 3) {
-        // If it's the last textbox, focus on the "บันทึก" button
         saveButtonRef.current?.focus();
+      } else if (section === 'traceabilityCode') {
+        const nextInput = document.querySelector('input[name="D1-0"]');
+        if (nextInput) {
+          nextInput.focus();
+        }
       } else {
         const nextSection = section === 'D1' && index === 3 ? 'D2' : section;
         const nextIndex = (index + 1) % 4;
@@ -85,7 +94,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements({ D1: Array(4).fill(''), D2: Array(4).fill('') });
+    setMeasurements({ traceabilityCode: '', D1: Array(4).fill(''), D2: Array(4).fill('') });
   };
 
   const handleSave = () => {
@@ -137,8 +146,27 @@ const MeasurementForm = () => {
       </div>
       <p className="text-center text-lg font-semibold">รูปชิ้นงาน</p>
       
-      <div className="grid md:grid-cols-2 gap-8">
-        {['D1', 'D2'].map(renderMeasurementInputs)}
+      <div className="space-y-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center space-x-2">
+              <label className="w-40">Traceability code</label>
+              <Input
+                type="text"
+                name="traceabilityCode"
+                value={measurements.traceabilityCode}
+                onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
+                onKeyDown={(e) => handleKeyDown('traceabilityCode', null, e)}
+                placeholder="Enter traceability code"
+                className="flex-grow"
+              />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <div className="grid md:grid-cols-2 gap-8">
+          {['D1', 'D2'].map(renderMeasurementInputs)}
+        </div>
       </div>
       
       <div className="flex justify-center space-x-4">
