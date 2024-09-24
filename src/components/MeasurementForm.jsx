@@ -23,6 +23,7 @@ const MeasurementForm = () => {
   });
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const saveButtonRef = useRef(null);
+  const traceabilityInputRef = useRef(null);
 
   const queryClient = useQueryClient();
 
@@ -35,6 +36,8 @@ const MeasurementForm = () => {
     if (savedMeasurements) {
       setMeasurements(savedMeasurements);
     }
+    // Focus on the Traceability code input when the component mounts
+    traceabilityInputRef.current?.focus();
   }, [savedMeasurements]);
 
   const saveMutation = useMutation({
@@ -95,6 +98,7 @@ const MeasurementForm = () => {
 
   const handleClear = () => {
     setMeasurements({ traceabilityCode: '', D1: Array(4).fill(''), D2: Array(4).fill('') });
+    traceabilityInputRef.current?.focus();
   };
 
   const handleSave = () => {
@@ -159,6 +163,7 @@ const MeasurementForm = () => {
                 onKeyDown={(e) => handleKeyDown('traceabilityCode', null, e)}
                 placeholder="Enter traceability code"
                 className="flex-grow"
+                ref={traceabilityInputRef}
               />
             </div>
           </CardContent>
