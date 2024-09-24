@@ -44,11 +44,11 @@ const MeasurementForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
-      toast.success('Measurements saved successfully');
+      toast.success('บันทึกเรียบร้อย !!');
     },
     onError: (error) => {
       console.error('Error saving measurements:', error);
-      toast.error('Failed to save measurements');
+      toast.error('! ไม่สามารถบันทึกข้อมูลได้ กรุณาติดต่อพี่นึก');
     },
   });
 
@@ -80,7 +80,7 @@ const MeasurementForm = () => {
       <CardContent className="p-6 space-y-6">
         <div className="flex justify-center mb-6">
           <img 
-            src="/workpiece-image.jpg" 
+            src="/FT.png" 
             alt="ชิ้นงานที่ต้องวัด" 
             className="w-full max-w-md h-auto rounded-lg shadow-md mx-auto object-cover"
           />
@@ -137,14 +137,14 @@ const MeasurementForm = () => {
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Save</AlertDialogTitle>
+            <AlertDialogTitle>ต้องการบันทึก</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to save these measurements?
+              คุณต้องการบันทึกข้อมูลงในระบบหรือไม่ ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmSave}>Confirm</AlertDialogAction>
+            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmSave}>บันทึก</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
