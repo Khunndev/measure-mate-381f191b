@@ -83,11 +83,11 @@ const MeasurementForm = () => {
     <Card className="shadow-lg">
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/2 pr-4">
+          <div className="md:w-1/2 pr-4 flex items-center justify-center">
             <img 
               src="/workpiece-image.jpg" 
-              alt="ชิ้นงานที่ต้องวัด" 
-              className="w-full max-w-xs h-auto rounded-lg shadow-md mx-auto object-cover"
+              alt="รูปตรวจชิ้นงาน" 
+              className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover"
             />
           </div>
           <div className="md:w-1/2 pl-4 space-y-6">
