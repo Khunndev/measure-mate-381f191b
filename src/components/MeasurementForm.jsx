@@ -7,15 +7,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState({
-    D1: Array(4).fill('0'),
-    D2: Array(4).fill('0')
+    D1: Array(4).fill(''),
+    D2: Array(4).fill('')
   });
 
   const queryClient = useQueryClient();
 
   const { data: savedMeasurements } = useQuery({
     queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { D1: Array(4).fill('0'), D2: Array(4).fill('0') },
+    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { D1: Array(4).fill(''), D2: Array(4).fill('') },
   });
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const MeasurementForm = () => {
     }
   };
 
-  const handleInputClick = (section, index) => {
+  const handleInputFocus = (section, index) => {
     setMeasurements(prev => ({
       ...prev,
       [section]: prev[section].map((v, i) => i === index ? '' : v)
@@ -68,7 +68,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements({ D1: Array(4).fill('0'), D2: Array(4).fill('0') });
+    setMeasurements({ D1: Array(4).fill(''), D2: Array(4).fill('') });
   };
 
   const handleSave = () => {
@@ -99,7 +99,7 @@ const MeasurementForm = () => {
                       name={`${section}-${index}`}
                       value={value}
                       onChange={(e) => handleInputChange(section, index, e.target.value)}
-                      onClick={() => handleInputClick(section, index)}
+                      onFocus={() => handleInputFocus(section, index)}
                       onKeyDown={(e) => handleKeyDown(section, index, e)}
                       placeholder="Enter measurement"
                       className="flex-grow"
