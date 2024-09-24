@@ -11,13 +11,15 @@ import { toast } from 'sonner';
 
 const API_URL = 'http://localhost:5000/api';
 
+const initialMeasurements = {
+  traceabilityCode: '',
+  inspectorName: '',
+  D1: Array(4).fill(''),
+  D2: Array(4).fill('')
+};
+
 const MeasurementForm = () => {
-  const [measurements, setMeasurements] = useState({
-    traceabilityCode: '',
-    inspectorName: '',
-    D1: Array(4).fill(''),
-    D2: Array(4).fill('')
-  });
+  const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const saveButtonRef = useRef(null);
   const traceabilityInputRef = useRef(null);
@@ -26,7 +28,7 @@ const MeasurementForm = () => {
 
   const { data: savedMeasurements } = useQuery({
     queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { traceabilityCode: '', inspectorName: '', D1: Array(4).fill(''), D2: Array(4).fill('') },
+    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || initialMeasurements,
   });
 
   useEffect(() => {
@@ -44,11 +46,13 @@ const MeasurementForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
-      toast.success('บันทึกเรียบร้อย !!');
+      toast.success('บันทึกสำเร็จ !!');
+      setMeasurements(initialMeasurements); // Clear the form
+      traceabilityInputRef.current?.focus(); // Focus on the traceability code input
     },
     onError: (error) => {
       console.error('Error saving measurements:', error);
-      toast.error('! ไม่สามารถบันทึกข้อมูลได้ กรุณาติดต่อพี่นึก');
+      toast.error('ไม่สามารถบันทึกได้ !! กรุณาติดต่อพี่นึก');
     },
   });
 
@@ -64,7 +68,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements({ traceabilityCode: '', inspectorName: '', D1: Array(4).fill(''), D2: Array(4).fill('') });
+    setMeasurements(initialMeasurements);
     traceabilityInputRef.current?.focus();
   };
 
@@ -137,9 +141,9 @@ const MeasurementForm = () => {
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>ต้องการบันทึก</AlertDialogTitle>
+            <AlertDialogTitle>Confirm Save</AlertDialogTitle>
             <AlertDialogDescription>
-              คุณต้องการบันทึกข้อมูลงในระบบหรือไม่ ?
+              คุณต้องการที่จะบันทึกข้อมูลหรือไม่ ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
