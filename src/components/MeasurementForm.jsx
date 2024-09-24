@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import MeasurementInputs from './MeasurementInputs';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:5000/api';
 
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState({
@@ -32,9 +35,10 @@ const MeasurementForm = () => {
   }, [savedMeasurements]);
 
   const saveMutation = useMutation({
-    mutationFn: (newMeasurements) => {
+    mutationFn: async (newMeasurements) => {
+      const response = await axios.post(`${API_URL}/measurements`, newMeasurements);
       localStorage.setItem('measurements', JSON.stringify(newMeasurements));
-      return newMeasurements;
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
