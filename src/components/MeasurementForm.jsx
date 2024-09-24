@@ -47,8 +47,8 @@ const MeasurementForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
       toast.success('Measurements saved successfully');
-      setMeasurements(initialMeasurements); // Clear the form
-      traceabilityInputRef.current?.focus(); // Focus on the traceability code input
+      setMeasurements(initialMeasurements);
+      traceabilityInputRef.current?.focus();
     },
     onError: (error) => {
       console.error('Error saving measurements:', error);
@@ -81,51 +81,54 @@ const MeasurementForm = () => {
 
   return (
     <Card className="shadow-lg">
-      <CardContent className="p-6 space-y-6">
-        <div className="flex justify-center mb-6">
-          <img 
-            src="/workpiece-image.jpg" 
-            alt="ชิ้นงานที่ต้องวัด" 
-            className="w-full max-w-md h-auto rounded-lg shadow-md mx-auto object-cover"
-          />
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <label className="w-40 text-lg font-semibold">Traceability code</label>
-          <Input
-            type="text"
-            name="traceabilityCode"
-            value={measurements.traceabilityCode}
-            onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
-            placeholder="Enter traceability code"
-            className="flex-grow"
-            ref={traceabilityInputRef}
-          />
-        </div>
+      <CardContent className="p-6">
+        <div className="flex flex-col md:flex-row">
+          <div className="md:w-1/2 pr-4">
+            <img 
+              src="/workpiece-image.jpg" 
+              alt="ชิ้นงานที่ต้องวัด" 
+              className="w-full max-w-xs h-auto rounded-lg shadow-md mx-auto object-cover"
+            />
+          </div>
+          <div className="md:w-1/2 pl-4 space-y-6">
+            <div className="flex items-center space-x-4">
+              <label className="w-40 text-lg font-semibold">Traceability code</label>
+              <Input
+                type="text"
+                name="traceabilityCode"
+                value={measurements.traceabilityCode}
+                onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
+                placeholder="Enter traceability code"
+                className="flex-grow"
+                ref={traceabilityInputRef}
+              />
+            </div>
 
-        <div className="flex items-center space-x-4">
-          <label className="w-40 text-lg font-semibold">ชื่อผู้ตรวจ</label>
-          <Input
-            type="text"
-            name="inspectorName"
-            value={measurements.inspectorName}
-            onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
-            placeholder="กรอกชื่อผู้ตรวจ"
-            className="flex-grow"
-          />
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-8">
-          <MeasurementInputs
-            section="D1"
-            measurements={measurements}
-            handleInputChange={handleInputChange}
-          />
-          <MeasurementInputs
-            section="D2"
-            measurements={measurements}
-            handleInputChange={handleInputChange}
-          />
+            <div className="flex items-center space-x-4">
+              <label className="w-40 text-lg font-semibold">ชื่อผู้ตรวจ</label>
+              <Input
+                type="text"
+                name="inspectorName"
+                value={measurements.inspectorName}
+                onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
+                placeholder="กรอกชื่อผู้ตรวจ"
+                className="flex-grow"
+              />
+            </div>
+            
+            <div className="space-y-6">
+              <MeasurementInputs
+                section="D1"
+                measurements={measurements}
+                handleInputChange={handleInputChange}
+              />
+              <MeasurementInputs
+                section="D2"
+                measurements={measurements}
+                handleInputChange={handleInputChange}
+              />
+            </div>
+          </div>
         </div>
       </CardContent>
       
