@@ -35,7 +35,6 @@ const MeasurementForm = () => {
   });
 
   const handleInputChange = (section, index, value) => {
-    // Only allow numeric input (including decimal point)
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setMeasurements(prev => ({
         ...prev,
@@ -46,7 +45,7 @@ const MeasurementForm = () => {
 
   const calculateAverage = (section) => {
     const values = measurements[section].filter(v => v !== '').map(Number);
-    return values.length ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : '55.00';
+    return values.length ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : '0.00';
   };
 
   const handleClear = () => {
