@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import MeasurementInputs from './MeasurementInputs';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -42,6 +43,11 @@ const MeasurementForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
+      toast.success('Measurements saved successfully');
+    },
+    onError: (error) => {
+      console.error('Error saving measurements:', error);
+      toast.error('Failed to save measurements');
     },
   });
 
@@ -75,7 +81,7 @@ const MeasurementForm = () => {
           <img 
             src="/workpiece-image.jpg" 
             alt="ชิ้นงานที่ต้องวัด" 
-            className="w-full max-w-md h-auto rounded-lg shadow-md"
+            className="w-full max-w-md h-auto rounded-lg shadow-md mx-auto object-cover"
           />
         </div>
         
