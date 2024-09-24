@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { connectDB } = require('./db');
 const measurementsRouter = require('./routes/measurements');
 
 const app = express();
@@ -10,6 +11,12 @@ app.use(express.json());
 
 app.use('/api/measurements', measurementsRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
+async function startServer() {
+  await connectDB();
+  
+  app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
+  });
+}
+
+startServer();
