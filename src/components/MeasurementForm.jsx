@@ -52,7 +52,7 @@ const MeasurementForm = () => {
     },
     onError: (error) => {
       console.error('Error saving measurements:', error);
-      toast.error('Failed to save measurements');
+      toast.error('! ไม่สามารถบันทึกข้อมูลได้ กรุณาติดต่อพี่นึก');
     },
   });
 
@@ -144,14 +144,14 @@ const MeasurementForm = () => {
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Save</AlertDialogTitle>
+            <AlertDialogTitle>ต้องการบันทึก</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to save these measurements?
+              คุณต้องการบันทึกข้อมูลงในระบบหรือไม่ ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmSave}>Confirm</AlertDialogAction>
+            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmSave}>บันทึก</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

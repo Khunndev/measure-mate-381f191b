@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
       .input('D2_4', sql.Float, D2[3])
       .input('D2_avg', sql.Float, calculateAverage(D2))
       .query(`
-        INSERT INTO Measurements (TraceabilityCode, InspectorName, D1_1, D1_2, D1_3, D1_4, D1_avg, D2_1, D2_2, D2_3, D2_4, D2_avg)
+        INSERT INTO  [PPR_FittingDB].[dbo].[Measurements] (TraceabilityCode, InspectorName, D1_1, D1_2, D1_3, D1_4, D1_avg, D2_1, D2_2, D2_3, D2_4, D2_avg)
         VALUES (@traceabilityCode, @inspectorName, @D1_1, @D1_2, @D1_3, @D1_4, @D1_avg, @D2_1, @D2_2, @D2_3, @D2_4, @D2_avg)
       `);
 
