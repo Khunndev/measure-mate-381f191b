@@ -4,12 +4,23 @@ import { Save, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState({
     D1: Array(4).fill(''),
     D2: Array(4).fill('')
   });
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -53,11 +64,16 @@ const MeasurementForm = () => {
   const handleKeyDown = (section, index, e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const nextSection = section === 'D1' && index === 3 ? 'D2' : section;
-      const nextIndex = (index + 1) % 4;
-      const nextInput = document.querySelector(`input[name="${nextSection}-${nextIndex}"]`);
-      if (nextInput) {
-        nextInput.focus();
+      if (section === 'D2' && index === 3) {
+        // If it's the last textbox, focus on the "บันทึก" button
+        document.querySelector('button:contains("บันทึก")').focus();
+      } else {
+        const nextSection = section === 'D1' && index === 3 ? 'D2' : section;
+        const nextIndex = (index + 1) % 4;
+        const nextInput = document.querySelector(`input[name="${nextSection}-${nextIndex}"]`);
+        if (nextInput) {
+          nextInput.focus();
+        }
       }
     }
   };
@@ -72,7 +88,12 @@ const MeasurementForm = () => {
   };
 
   const handleSave = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSave = () => {
     saveMutation.mutate(measurements);
+    setShowConfirmDialog(false);
   };
 
   return (
@@ -125,6 +146,21 @@ const MeasurementForm = () => {
           <Save className="mr-2 h-4 w-4" /> บันทึก
         </Button>
       </div>
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>ยืนยันการบันทึก</AlertDialogTitle>
+            <AlertDialogDescription>
+              ต้องการบันทึกค่านี้ไหม?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmSave}>ยืนยัน</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
