@@ -11,13 +11,15 @@ import { toast } from 'sonner';
 
 const API_URL = 'http://localhost:5000/api';
 
+const initialMeasurements = {
+  traceabilityCode: '',
+  inspectorName: '',
+  D1: Array(4).fill(''),
+  D2: Array(4).fill('')
+};
+
 const MeasurementForm = () => {
-  const [measurements, setMeasurements] = useState({
-    traceabilityCode: '',
-    inspectorName: '',
-    D1: Array(4).fill(''),
-    D2: Array(4).fill('')
-  });
+  const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const saveButtonRef = useRef(null);
   const traceabilityInputRef = useRef(null);
@@ -26,7 +28,7 @@ const MeasurementForm = () => {
 
   const { data: savedMeasurements } = useQuery({
     queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { traceabilityCode: '', inspectorName: '', D1: Array(4).fill(''), D2: Array(4).fill('') },
+    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || initialMeasurements,
   });
 
   useEffect(() => {
@@ -45,6 +47,8 @@ const MeasurementForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
       toast.success('Measurements saved successfully');
+      setMeasurements(initialMeasurements); // Clear the form
+      traceabilityInputRef.current?.focus(); // Focus on the traceability code input
     },
     onError: (error) => {
       console.error('Error saving measurements:', error);
@@ -64,7 +68,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements({ traceabilityCode: '', inspectorName: '', D1: Array(4).fill(''), D2: Array(4).fill('') });
+    setMeasurements(initialMeasurements);
     traceabilityInputRef.current?.focus();
   };
 
