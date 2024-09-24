@@ -4,11 +4,12 @@ const { sql } = require('../db');
 
 router.post('/', async (req, res) => {
   try {
-    const { traceabilityCode, D1, D2 } = req.body;
+    const { traceabilityCode, inspectorName, D1, D2 } = req.body;
     
     const pool = await sql.connect();
     const result = await pool.request()
       .input('traceabilityCode', sql.VarChar, traceabilityCode)
+      .input('inspectorName', sql.VarChar, inspectorName)
       .input('D1_1', sql.Float, D1[0])
       .input('D1_2', sql.Float, D1[1])
       .input('D1_3', sql.Float, D1[2])
@@ -20,8 +21,8 @@ router.post('/', async (req, res) => {
       .input('D2_4', sql.Float, D2[3])
       .input('D2_avg', sql.Float, calculateAverage(D2))
       .query(`
-        INSERT INTO Measurements (TraceabilityCode, D1_1, D1_2, D1_3, D1_4, D1_avg, D2_1, D2_2, D2_3, D2_4, D2_avg)
-        VALUES (@traceabilityCode, @D1_1, @D1_2, @D1_3, @D1_4, @D1_avg, @D2_1, @D2_2, @D2_3, @D2_4, @D2_avg)
+        INSERT INTO Measurements (TraceabilityCode, InspectorName, D1_1, D1_2, D1_3, D1_4, D1_avg, D2_1, D2_2, D2_3, D2_4, D2_avg)
+        VALUES (@traceabilityCode, @inspectorName, @D1_1, @D1_2, @D1_3, @D1_4, @D1_avg, @D2_1, @D2_2, @D2_3, @D2_4, @D2_avg)
       `);
 
     res.status(201).json({ message: 'Measurement saved successfully' });

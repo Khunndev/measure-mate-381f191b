@@ -10,6 +10,7 @@ GO
 CREATE TABLE Measurements (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     TraceabilityCode VARCHAR(50) NOT NULL,
+    InspectorName VARCHAR(100) NOT NULL,
     D1_1 FLOAT,
     D1_2 FLOAT,
     D1_3 FLOAT,

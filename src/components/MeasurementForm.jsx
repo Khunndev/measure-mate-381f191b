@@ -14,6 +14,7 @@ const API_URL = 'http://localhost:5000/api';
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState({
     traceabilityCode: '',
+    inspectorName: '',
     D1: Array(4).fill(''),
     D2: Array(4).fill('')
   });
@@ -25,7 +26,7 @@ const MeasurementForm = () => {
 
   const { data: savedMeasurements } = useQuery({
     queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { traceabilityCode: '', D1: Array(4).fill(''), D2: Array(4).fill('') },
+    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || { traceabilityCode: '', inspectorName: '', D1: Array(4).fill(''), D2: Array(4).fill('') },
   });
 
   useEffect(() => {
@@ -52,8 +53,8 @@ const MeasurementForm = () => {
   });
 
   const handleInputChange = (section, index, value) => {
-    if (section === 'traceabilityCode') {
-      setMeasurements(prev => ({ ...prev, traceabilityCode: value }));
+    if (section === 'traceabilityCode' || section === 'inspectorName') {
+      setMeasurements(prev => ({ ...prev, [section]: value }));
     } else if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setMeasurements(prev => ({
         ...prev,
@@ -63,7 +64,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements({ traceabilityCode: '', D1: Array(4).fill(''), D2: Array(4).fill('') });
+    setMeasurements({ traceabilityCode: '', inspectorName: '', D1: Array(4).fill(''), D2: Array(4).fill('') });
     traceabilityInputRef.current?.focus();
   };
 
@@ -95,6 +96,18 @@ const MeasurementForm = () => {
             placeholder="Enter traceability code"
             className="flex-grow"
             ref={traceabilityInputRef}
+          />
+        </div>
+
+        <div className="flex items-center space-x-4">
+          <label className="w-40 text-lg font-semibold">ชื่อผู้ตรวจ</label>
+          <Input
+            type="text"
+            name="inspectorName"
+            value={measurements.inspectorName}
+            onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
+            placeholder="กรอกชื่อผู้ตรวจ"
+            className="flex-grow"
           />
         </div>
         
