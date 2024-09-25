@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
-const MeasurementInputs = ({ section, measurements, handleInputChange, errors }) => {
+const MeasurementInputs = ({ section, measurements, handleInputChange, errors, onEnterPress }) => {
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    inputRefs.current = inputRefs.current.slice(0, measurements[section].length);
+  }, [measurements, section]);
+
   const calculateAverage = () => {
     const values = measurements[section].filter(v => v !== '').map(Number);
     return values.length ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : '0.00';
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (index < measurements[section].length - 1) {
+        inputRefs.current[index + 1].focus();
+      } else {
+        onEnterPress(section);
+      }
+    }
+  };
+
+  const handleFocus = (index) => {
+    handleInputChange(section, index, '');
   };
 
   return (
@@ -19,8 +40,11 @@ const MeasurementInputs = ({ section, measurements, handleInputChange, errors })
             name={`${section}-${index}`}
             value={value}
             onChange={(e) => handleInputChange(section, index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
+            onFocus={() => handleFocus(index)}
             placeholder="Enter measurement"
             className={errors[`${section}-${index}`] ? 'border-red-500' : ''}
+            ref={el => inputRefs.current[index] = el}
           />
           {errors[`${section}-${index}`] && <p className="text-red-500 text-sm">{errors[`${section}-${index}`]}</p>}
         </div>

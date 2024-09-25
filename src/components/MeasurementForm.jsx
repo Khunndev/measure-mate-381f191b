@@ -20,6 +20,8 @@ const MeasurementForm = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errors, setErrors] = useState({});
   const traceabilityInputRef = useRef(null);
+  const inspectorNameInputRef = useRef(null);
+  const saveButtonRef = useRef(null);
 
   const queryClient = useQueryClient();
 
@@ -102,6 +104,20 @@ const MeasurementForm = () => {
     setShowConfirmDialog(false);
   };
 
+  const handleEnterPress = (section) => {
+    if (section === 'traceabilityCode') {
+      inspectorNameInputRef.current?.focus();
+    } else if (section === 'inspectorName') {
+      // Focus on the first input of D1
+      document.querySelector('input[name="D1-0"]')?.focus();
+    } else if (section === 'D1') {
+      // Focus on the first input of D2
+      document.querySelector('input[name="D2-0"]')?.focus();
+    } else if (section === 'D2') {
+      saveButtonRef.current?.focus();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-center mb-6">แบบฟอร์มตรวจสอบ</h2>
@@ -110,6 +126,8 @@ const MeasurementForm = () => {
         handleInputChange={handleInputChange}
         errors={errors}
         traceabilityInputRef={traceabilityInputRef}
+        inspectorNameInputRef={inspectorNameInputRef}
+        onEnterPress={handleEnterPress}
       />
       <MeasurementCard
         onClear={handleClear}
@@ -117,6 +135,7 @@ const MeasurementForm = () => {
         showConfirmDialog={showConfirmDialog}
         setShowConfirmDialog={setShowConfirmDialog}
         confirmSave={confirmSave}
+        saveButtonRef={saveButtonRef}
       >
         <div className="grid grid-cols-2 gap-6">
           <div>
@@ -135,12 +154,14 @@ const MeasurementForm = () => {
               measurements={measurements}
               handleInputChange={handleInputChange}
               errors={errors}
+              onEnterPress={handleEnterPress}
             />
             <MeasurementInputs
               section="D2"
               measurements={measurements}
               handleInputChange={handleInputChange}
               errors={errors}
+              onEnterPress={handleEnterPress}
             />
           </div>
         </div>
