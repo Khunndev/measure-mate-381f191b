@@ -109,18 +109,9 @@ const MeasurementForm = () => {
   return (
     <Card className="shadow-lg">
       <CardContent className="p-4 sm:p-6">
-        <div className="flex flex-col lg:flex-row">
-          <div className="lg:w-1/2 lg:pr-4 mb-6 lg:mb-0">
-            <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
-            <div className="flex items-center justify-center">
-              <img 
-                src="/FT.png" 
-                alt="รูปตรวจชิ้นงาน" 
-                className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover mx-auto"
-              />
-            </div>
-          </div>
-          <div className="lg:w-1/2 lg:pl-4 space-y-6">
+        <div className="space-y-6">
+          {/* Traceability code and Inspector Name at the top */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col space-y-2">
               <label className="text-lg font-semibold">Traceability code</label>
               <Input
@@ -147,8 +138,21 @@ const MeasurementForm = () => {
               />
               {errors.inspectorName && <p className="text-red-500 text-sm">{errors.inspectorName}</p>}
             </div>
-            
-            <div className="space-y-6">
+          </div>
+
+          {/* Main content */}
+          <div className="flex flex-col lg:flex-row lg:space-x-6">
+            <div className="lg:w-1/2 mb-6 lg:mb-0">
+              <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
+              <div className="flex items-center justify-center">
+                <img 
+                  src="/FT.png" 
+                  alt="รูปตรวจชิ้นงาน" 
+                  className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover mx-auto"
+                />
+              </div>
+            </div>
+            <div className="lg:w-1/2 space-y-6">
               <MeasurementInputs
                 section="D1"
                 measurements={measurements}
