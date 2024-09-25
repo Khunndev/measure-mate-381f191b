@@ -5,6 +5,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Index from "./pages/Index";
+import Templates from "./pages/Templates";
+import Settings from "./pages/Settings";
+import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -23,13 +26,24 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={user ? <Index /> : <Navigate to="/login" replace />}
-            />
-          </Routes>
+          {user && <Navbar />}
+          <div className={user ? "pt-16" : ""}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/"
+                element={user ? <Index /> : <Navigate to="/login" replace />}
+              />
+              <Route
+                path="/templates"
+                element={user ? <Templates /> : <Navigate to="/login" replace />}
+              />
+              <Route
+                path="/settings"
+                element={user ? <Settings /> : <Navigate to="/login" replace />}
+              />
+            </Routes>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
