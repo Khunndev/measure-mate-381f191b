@@ -1,6 +1,8 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import FormEditor from './FormEditor';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const FormEditorModal = ({ isOpen, onClose, template }) => {
   return (
@@ -9,7 +11,9 @@ const FormEditorModal = ({ isOpen, onClose, template }) => {
         <DialogHeader>
           <DialogTitle>Edit Template: {template?.name}</DialogTitle>
         </DialogHeader>
-        <FormEditor template={template} />
+        <DndProvider backend={HTML5Backend}>
+          <FormEditor template={template} />
+        </DndProvider>
       </DialogContent>
     </Dialog>
   );
