@@ -12,7 +12,7 @@ const App = () => {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch('http://localhost:3334/health');
+        const response = await fetch('http://backend:3334/health');
         if (response.ok) {
           toast.success("เซิร์ฟเวอร์ทำงานปกติ!");
         } else {
