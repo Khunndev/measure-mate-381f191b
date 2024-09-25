@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import MeasurementInputs from './MeasurementInputs';
 import MeasurementCard from './MeasurementCard';
 import TraceabilityInspectorFields from './TraceabilityInspectorFields';
 import { toast } from 'sonner';
 import { saveMeasurement } from '../mockApi/mockApi';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialMeasurements = {
   traceabilityCode: '',
@@ -13,28 +14,39 @@ const initialMeasurements = {
   D2: Array(4).fill('')
 };
 
-const MeasurementForm = ({ template, inspectorName, focusTraceability }) => {
+const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errors, setErrors] = useState({});
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const traceabilityInputRef = useRef(null);
   const inspectorNameInputRef = useRef(null);
   const saveButtonRef = useRef(null);
 
   const queryClient = useQueryClient();
 
+  const { data: templates } = useQuery({
+    queryKey: ['templates'],
+    queryFn: async () => {
+      // Replace this with your actual API call to fetch templates
+      return [
+        { id: '1', name: 'Template 1' },
+        { id: '2', name: 'Template 2' },
+        { id: '3', name: 'Template 3' },
+      ];
+    },
+  });
+
   useEffect(() => {
-    if (template) {
+    if (selectedTemplate) {
+      // Here you would typically fetch the template details and update the form
+      // For now, we'll just update the title
       setMeasurements(prevMeasurements => ({
         ...prevMeasurements,
-        ...template.measurements,
-        inspectorName: inspectorName || ''
+        templateName: selectedTemplate.name
       }));
     }
-    if (focusTraceability) {
-      traceabilityInputRef.current?.focus();
-    }
-  }, [template, inspectorName, focusTraceability]);
+  }, [selectedTemplate]);
 
   const saveMutation = useMutation({
     mutationFn: saveMeasurement,
@@ -83,7 +95,7 @@ const MeasurementForm = ({ template, inspectorName, focusTraceability }) => {
   };
 
   const handleClear = () => {
-    setMeasurements({...initialMeasurements, inspectorName});
+    setMeasurements(initialMeasurements);
     setErrors({});
     traceabilityInputRef.current?.focus();
   };
@@ -111,9 +123,30 @@ const MeasurementForm = ({ template, inspectorName, focusTraceability }) => {
     }
   };
 
+  const handleTemplateChange = (templateId) => {
+    const template = templates.find(t => t.id === templateId);
+    setSelectedTemplate(template);
+  };
+
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-center mb-6">แบบฟอร์มตรวจสอบ - {template?.name}</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">แบบฟอร์มตรวจสอบ - {measurements.templateName || 'Select a template'}</h2>
+      
+      <div className="mb-4">
+        <Select onValueChange={handleTemplateChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a template" />
+          </SelectTrigger>
+          <SelectContent>
+            {templates?.map((template) => (
+              <SelectItem key={template.id} value={template.id}>
+                {template.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <TraceabilityInspectorFields
         measurements={measurements}
         handleInputChange={handleInputChange}
