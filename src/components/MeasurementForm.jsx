@@ -9,7 +9,7 @@ import MeasurementInputs from './MeasurementInputs';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:3333/api';
 
 const initialMeasurements = {
   traceabilityCode: '',
@@ -22,8 +22,10 @@ const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
   const saveButtonRef = useRef(null);
   const traceabilityInputRef = useRef(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -41,15 +43,34 @@ const MeasurementForm = () => {
 
   const saveMutation = useMutation({
     mutationFn: async (newMeasurements) => {
-      const response = await axios.post(`${API_URL}/measurements`, newMeasurements);
-      localStorage.setItem('measurements', JSON.stringify(newMeasurements));
-      return response.data;
+      setIsSubmitting(true);
+      try {
+        const response = await axios.post(`${API_URL}/measurements`, newMeasurements);
+        localStorage.setItem('measurements', JSON.stringify(newMeasurements));
+        return response.data;
+      } finally {
+        setIsSubmitting(false);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
-      toast.success('Measurements saved successfully');
+      localStorage.removeItem('measurements');
+
+      toast.success('บันทึกสำเร็จแล้ว !!');
+
+      // Briefly show success feedback
+      setShowSuccess(true);
+
+      // Clear form fields and reset errors
       setMeasurements(initialMeasurements);
+      setErrors({});
+
       traceabilityInputRef.current?.focus();
+
+      setTimeout(() => setShowSuccess(false), 1000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Adjust the delay as needed
     },
     onError: (error) => {
       console.error('Error saving measurements:', error);
@@ -91,6 +112,7 @@ const MeasurementForm = () => {
 
   const handleClear = () => {
     setMeasurements(initialMeasurements);
+    localStorage.removeItem('measurements');
     setErrors({});
     traceabilityInputRef.current?.focus();
   };
@@ -168,10 +190,21 @@ const MeasurementForm = () => {
       
       <CardFooter className="flex justify-center space-x-4 p-4 sm:p-6">
         <Button variant="outline" onClick={handleClear} className="w-full sm:w-32">
-          <Trash2 className="mr-2 h-4 w-4" /> Clear
+          <Trash2 className="mr-2 h-4 w-4" /> ยกเลิก
         </Button>
-        <Button onClick={handleSave} ref={saveButtonRef} className="w-full sm:w-32 bg-primary hover:bg-primary-dark">
-          <Save className="mr-2 h-4 w-4" /> Save
+        <Button
+          onClick={handleSave}
+          ref={saveButtonRef}
+          className={`w-full sm:w-32 bg-primary hover:bg-primary-dark
+                      ${showSuccess ? 'bg-green-500 transition-colors duration-300 ease-in-out' : ''}
+                      ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isSubmitting} // Disable button during submission
+        >
+          {isSubmitting ? 'Saving...' : ( // Show loading indicator during submission
+            <>
+              <Save className="mr-2 h-4 w-4" /> บันทึก
+            </>
+          )}
         </Button>
       </CardFooter>
 

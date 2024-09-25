@@ -85,7 +85,7 @@ export const loadReportErrorEventListener = (() => {
       }
       reportedErrors.add(errorId);
       // Optionally, clear the set after some time to prevent it from growing indefinitely
-      setTimeout(() => reportedErrors.delete(errorId), 5000);
+      setTimeout(() => reportedErrors.delete(errorId), 3333);
       return false;
     };
 
