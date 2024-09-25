@@ -31,6 +31,13 @@ const Login = () => {
     loginMutation.mutate({ username, password });
   };
 
+  const handleBypass = () => {
+    // Simulate a successful login
+    const mockUser = { id: 'temp', username: 'Temporary User' };
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    navigate('/');
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
@@ -67,6 +74,11 @@ const Login = () => {
               Login
             </Button>
           </form>
+          <div className="mt-4">
+            <Button onClick={handleBypass} variant="outline" className="w-full">
+              Bypass Login (Temporary)
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
