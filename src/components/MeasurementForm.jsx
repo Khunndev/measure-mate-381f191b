@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Save, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import MeasurementInputs from './MeasurementInputs';
+import MeasurementCard from './MeasurementCard';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -22,7 +19,6 @@ const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errors, setErrors] = useState({});
-  const saveButtonRef = useRef(null);
   const traceabilityInputRef = useRef(null);
 
   const queryClient = useQueryClient();
@@ -107,93 +103,71 @@ const MeasurementForm = () => {
   };
 
   return (
-    <Card className="shadow-lg">
-      <CardContent className="p-4 sm:p-6">
-        <div className="space-y-6">
-          {/* Traceability code and Inspector Name at the top */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col space-y-2">
-              <label className="text-lg font-semibold">Traceability code</label>
-              <Input
-                type="text"
-                name="traceabilityCode"
-                value={measurements.traceabilityCode}
-                onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
-                placeholder="Enter traceability code"
-                className={errors.traceabilityCode ? 'border-red-500' : ''}
-                ref={traceabilityInputRef}
-              />
-              {errors.traceabilityCode && <p className="text-red-500 text-sm">{errors.traceabilityCode}</p>}
-            </div>
-
-            <div className="flex flex-col space-y-2">
-              <label className="text-lg font-semibold">ชื่อผู้ตรวจ</label>
-              <Input
-                type="text"
-                name="inspectorName"
-                value={measurements.inspectorName}
-                onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
-                placeholder="กรอกชื่อผู้ตรวจ"
-                className={errors.inspectorName ? 'border-red-500' : ''}
-              />
-              {errors.inspectorName && <p className="text-red-500 text-sm">{errors.inspectorName}</p>}
-            </div>
+    <MeasurementCard
+      onClear={handleClear}
+      onSave={handleSave}
+      showConfirmDialog={showConfirmDialog}
+      setShowConfirmDialog={setShowConfirmDialog}
+      confirmSave={confirmSave}
+    >
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-4">
+          <div className="flex flex-col space-y-2">
+            <label className="text-lg font-semibold">Traceability code</label>
+            <Input
+              type="text"
+              name="traceabilityCode"
+              value={measurements.traceabilityCode}
+              onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
+              placeholder="Enter traceability code"
+              className={errors.traceabilityCode ? 'border-red-500' : ''}
+              ref={traceabilityInputRef}
+            />
+            {errors.traceabilityCode && <p className="text-red-500 text-sm">{errors.traceabilityCode}</p>}
           </div>
 
-          {/* Main content */}
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
-              <div className="flex items-center justify-center">
-                <img 
-                  src="/FT.png" 
-                  alt="รูปตรวจชิ้นงาน" 
-                  className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover mx-auto"
-                />
-              </div>
-            </div>
-            <div className="space-y-6">
-              <MeasurementInputs
-                section="D1"
-                measurements={measurements}
-                handleInputChange={handleInputChange}
-                errors={errors}
-              />
-              <MeasurementInputs
-                section="D2"
-                measurements={measurements}
-                handleInputChange={handleInputChange}
-                errors={errors}
-              />
-            </div>
+          <div className="flex flex-col space-y-2">
+            <label className="text-lg font-semibold">ชื่อผู้ตรวจ</label>
+            <Input
+              type="text"
+              name="inspectorName"
+              value={measurements.inspectorName}
+              onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
+              placeholder="กรอกชื่อผู้ตรวจ"
+              className={errors.inspectorName ? 'border-red-500' : ''}
+            />
+            {errors.inspectorName && <p className="text-red-500 text-sm">{errors.inspectorName}</p>}
           </div>
         </div>
-      </CardContent>
-      
-      <CardFooter className="flex justify-center space-x-4 p-4 sm:p-6">
-        <Button variant="outline" onClick={handleClear} className="w-full sm:w-32">
-          <Trash2 className="mr-2 h-4 w-4" /> Clear
-        </Button>
-        <Button onClick={handleSave} ref={saveButtonRef} className="w-full sm:w-32 bg-primary hover:bg-primary-dark">
-          <Save className="mr-2 h-4 w-4" /> Save
-        </Button>
-      </CardFooter>
 
-      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Save</AlertDialogTitle>
-            <AlertDialogDescription>
-              คุณต้องการที่จะบันทึกข้อมูลหรือไม่ ?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmSave}>บันทึก</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </Card>
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
+            <div className="flex items-center justify-center">
+              <img 
+                src="/FT.png" 
+                alt="รูปตรวจชิ้นงาน" 
+                className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover mx-auto"
+              />
+            </div>
+          </div>
+          <div className="space-y-6">
+            <MeasurementInputs
+              section="D1"
+              measurements={measurements}
+              handleInputChange={handleInputChange}
+              errors={errors}
+            />
+            <MeasurementInputs
+              section="D2"
+              measurements={measurements}
+              handleInputChange={handleInputChange}
+              errors={errors}
+            />
+          </div>
+        </div>
+      </div>
+    </MeasurementCard>
   );
 };
 
