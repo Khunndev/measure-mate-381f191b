@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Index from "./pages/Index";
 import Templates from "./pages/Templates";
 import Settings from "./pages/Settings";
+import MeasurementForm from "./pages/MeasurementForm";
 import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
@@ -32,7 +33,11 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route
                 path="/"
-                element={user ? <Index /> : <Navigate to="/login" replace />}
+                element={user ? <Navigate to="/measurement" replace /> : <Navigate to="/login" replace />}
+              />
+              <Route
+                path="/measurement"
+                element={user ? <MeasurementForm /> : <Navigate to="/login" replace />}
               />
               <Route
                 path="/templates"

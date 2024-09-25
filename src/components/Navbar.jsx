@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, FileText, Settings, LogOut } from 'lucide-react';
+import { Home, FileText, Settings, LogOut, Ruler } from 'lucide-react';
 
 const Navbar = () => {
   return (
@@ -13,6 +13,9 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             <Link to="/" className="flex items-center hover:text-primary transition-colors duration-200">
               <Home className="mr-1 h-5 w-5" /> Home
+            </Link>
+            <Link to="/measurement" className="flex items-center hover:text-primary transition-colors duration-200">
+              <Ruler className="mr-1 h-5 w-5" /> Measurement
             </Link>
             <Link to="/templates" className="flex items-center hover:text-primary transition-colors duration-200">
               <FileText className="mr-1 h-5 w-5" /> Templates
