@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { sql } = require('../db');
 
+router.get('/', async (req, res) => {
+  try {
+    const pool = await sql.connect();
+    const result = await pool.request().query('SELECT ID as id, Name as name FROM Templates');
+    res.json(result.recordset);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching templates' });
+  }
+});
+
 router.post('/save', async (req, res) => {
   try {
     const { elements } = req.body;

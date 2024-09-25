@@ -6,6 +6,7 @@ import TraceabilityInspectorFields from './TraceabilityInspectorFields';
 import { toast } from 'sonner';
 import { saveMeasurement } from '../mockApi/mockApi';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import axios from 'axios';
 
 const initialMeasurements = {
   traceabilityCode: '',
@@ -25,15 +26,11 @@ const MeasurementForm = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: templates } = useQuery({
+  const { data: templates, isLoading: templatesLoading } = useQuery({
     queryKey: ['templates'],
     queryFn: async () => {
-      // Replace this with your actual API call to fetch templates
-      return [
-        { id: '1', name: 'Template 1' },
-        { id: '2', name: 'Template 2' },
-        { id: '3', name: 'Template 3' },
-      ];
+      const response = await axios.get('http://localhost:5000/api/templates');
+      return response.data;
     },
   });
 
@@ -127,6 +124,10 @@ const MeasurementForm = () => {
     const template = templates.find(t => t.id === templateId);
     setSelectedTemplate(template);
   };
+
+  if (templatesLoading) {
+    return <div>Loading templates...</div>;
+  }
 
   return (
     <div className="space-y-6">
