@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { X } from 'lucide-react';
@@ -8,31 +8,12 @@ const DraggableElement = ({ id, type, left, top, content, width, height, onMove,
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
-    type,
+    type: 'element',
     item: { id, left, top },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-
-  const [, drop] = useDrop({
-    accept: type,
-    hover(item, monitor) {
-      if (item.id !== id) {
-        const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-        const clientOffset = monitor.getClientOffset();
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-        if (hoverClientY < hoverMiddleY) {
-          onMove(id, item.left, item.top);
-          onMove(item.id, left, top);
-        }
-      }
-    },
-  });
-
-  drag(drop(ref));
 
   const handleContentChange = (e) => {
     onUpdate(id, { content: e.target.value });
@@ -66,7 +47,7 @@ const DraggableElement = ({ id, type, left, top, content, width, height, onMove,
   };
 
   return (
-    <div ref={ref} style={elementStyle} className="group">
+    <div ref={drag(ref)} style={elementStyle} className="group">
       {renderElement()}
       <button
         onClick={handleRemove}

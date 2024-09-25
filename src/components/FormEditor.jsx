@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
 import DraggableElement from './DraggableElement';
@@ -8,10 +8,16 @@ import { useToast } from './ui/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
-const FormEditor = () => {
+const FormEditor = ({ template, onSave }) => {
   const [elements, setElements] = useState([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (template && template.elements) {
+      setElements(template.elements);
+    }
+  }, [template]);
 
   const [, drop] = useDrop({
     accept: ['LABEL', 'TEXTBOX', 'IMAGE'],
@@ -57,21 +63,13 @@ const FormEditor = () => {
     setElements(prevElements => prevElements.filter(el => el.id !== id));
   };
 
-  const saveTemplateMutation = useMutation({
-    mutationFn: (template) => axios.post('/api/template/save', template),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['templates']);
-      toast({ title: 'Success', description: 'Template saved successfully' });
-    },
-    onError: () => toast({ title: 'Error', description: 'Failed to save template', variant: 'destructive' }),
-  });
-
   const handleSave = () => {
-    saveTemplateMutation.mutate({ elements });
+    onSave({ ...template, elements });
+    toast({ title: 'Success', description: 'Template saved successfully' });
   };
 
   const handleReset = () => {
-    setElements([]);
+    setElements(template.elements || []);
   };
 
   return (
