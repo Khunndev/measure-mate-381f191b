@@ -111,7 +111,7 @@ const MeasurementForm = () => {
       <CardContent className="p-4 sm:p-6">
         <div className="space-y-6">
           {/* Traceability code and Inspector Name at the top */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col space-y-2">
               <label className="text-lg font-semibold">Traceability code</label>
               <Input
@@ -141,8 +141,8 @@ const MeasurementForm = () => {
           </div>
 
           {/* Main content */}
-          <div className="flex flex-col lg:flex-row lg:space-x-6">
-            <div className="lg:w-1/2 mb-6 lg:mb-0">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
               <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
               <div className="flex items-center justify-center">
                 <img 
@@ -152,7 +152,7 @@ const MeasurementForm = () => {
                 />
               </div>
             </div>
-            <div className="lg:w-1/2 space-y-6">
+            <div className="space-y-6">
               <MeasurementInputs
                 section="D1"
                 measurements={measurements}
