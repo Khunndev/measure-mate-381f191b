@@ -4,7 +4,7 @@ const { connectDB } = require('./db');
 const measurementsRouter = require('./routes/measurements');
 
 const app = express();
-const port = process.env.PORT || 3333;
+const port = process.env.PORT || 3334;
 
 const corsOptions = {
   origin: '*',
