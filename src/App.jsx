@@ -3,6 +3,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import Login from "./pages/Login";
 import Index from "./pages/Index";
 import Templates from "./pages/Templates";
@@ -23,29 +25,31 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <BrowserRouter>
-          {user && <Navbar />}
-          <div className={user ? "pt-16" : ""}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/"
-                element={user ? <Index /> : <Navigate to="/login" replace />}
-              />
-              <Route
-                path="/templates"
-                element={user ? <Templates /> : <Navigate to="/login" replace />}
-              />
-              <Route
-                path="/settings"
-                element={user ? <Settings /> : <Navigate to="/login" replace />}
-              />
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
+      <DndProvider backend={HTML5Backend}>
+        <TooltipProvider>
+          <Toaster />
+          <BrowserRouter>
+            {user && <Navbar />}
+            <div className={user ? "pt-16" : ""}>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route
+                  path="/"
+                  element={user ? <Index /> : <Navigate to="/login" replace />}
+                />
+                <Route
+                  path="/templates"
+                  element={user ? <Templates /> : <Navigate to="/login" replace />}
+                />
+                <Route
+                  path="/settings"
+                  element={user ? <Settings /> : <Navigate to="/login" replace />}
+                />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </TooltipProvider>
+      </DndProvider>
     </QueryClientProvider>
   );
 };

@@ -7,19 +7,19 @@ export const fetchTemplates = async () => {
   return mockTemplates;
 };
 
-export const createTemplate = async (name) => {
+export const createTemplate = async (template) => {
   await delay(500);
-  const newTemplate = { id: String(mockTemplates.length + 1), name };
+  const newTemplate = { id: String(mockTemplates.length + 1), ...template };
   mockTemplates.push(newTemplate);
   return newTemplate;
 };
 
-export const updateTemplate = async (id, name) => {
+export const updateTemplate = async (id, template) => {
   await delay(500);
-  const template = mockTemplates.find(t => t.id === id);
-  if (template) {
-    template.name = name;
-    return template;
+  const index = mockTemplates.findIndex(t => t.id === id);
+  if (index !== -1) {
+    mockTemplates[index] = { ...mockTemplates[index], ...template };
+    return mockTemplates[index];
   }
   throw new Error('Template not found');
 };
@@ -48,4 +48,11 @@ export const login = async (username, password) => {
     return { user: { id: user.id, username: user.username }, token: 'mock-token' };
   }
   throw new Error('Invalid username or password');
+};
+
+export const uploadImage = async (file) => {
+  await delay(500);
+  // In a real implementation, this would handle the file upload to the server
+  // and return the file path. For now, we'll just return a mock path.
+  return { imagePath: `/uploads/${file.name}` };
 };
