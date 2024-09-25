@@ -85,11 +85,11 @@ const MeasurementForm = () => {
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 pr-4 flex flex-col">
             <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
-            <div className="flex-grow flex items-center justify-center">
+            <div className="flex-grow flex items-start justify-center">
               <img 
-                src="/workpiece-image.jpg" 
+                src="/FT.png" 
                 alt="รูปตรวจชิ้นงาน" 
-                className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover"
+                className="w-full max-w-sm h-auto rounded-lg shadow-md object-cover mx-auto"
               />
             </div>
           </div>
