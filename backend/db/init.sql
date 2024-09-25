@@ -23,4 +23,28 @@ CREATE TABLE Measurements (
     D2_avg FLOAT,
     CreatedAt DATETIME DEFAULT GETDATE()
 );
+
+-- Create the Templates table
+CREATE TABLE Templates (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+-- Create the Users table
+CREATE TABLE Users (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    Email NVARCHAR(255) NOT NULL UNIQUE,
+    Name NVARCHAR(100) NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- Insert sample templates
+INSERT INTO Templates (Name) VALUES
+('Template 1'),
+('Template 2'),
+('Template 3'),
+('Template 4'),
+('Template 5');
 GO
