@@ -9,7 +9,7 @@ import MeasurementInputs from './MeasurementInputs';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const API_URL = 'http://backend:3334/api';
+const API_URL = 'http://172.28.119.10:3334/api';
 
 const initialMeasurements = {
   traceabilityCode: '',
