@@ -2,7 +2,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 
-const TraceabilityInspectorFields = ({ measurements, handleInputChange, errors }) => {
+const TraceabilityInspectorFields = ({ measurements, handleInputChange, errors, traceabilityInputRef }) => {
   return (
     <Card className="mb-6 shadow-lg">
       <CardContent className="p-4 sm:p-6">
@@ -16,6 +16,7 @@ const TraceabilityInspectorFields = ({ measurements, handleInputChange, errors }
               onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
               placeholder="Enter traceability code"
               className={errors.traceabilityCode ? 'border-red-500' : ''}
+              ref={traceabilityInputRef}
             />
             {errors.traceabilityCode && <p className="text-red-500 text-sm">{errors.traceabilityCode}</p>}
           </div>

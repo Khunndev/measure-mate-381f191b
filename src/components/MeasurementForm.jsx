@@ -108,6 +108,7 @@ const MeasurementForm = () => {
         measurements={measurements}
         handleInputChange={handleInputChange}
         errors={errors}
+        traceabilityInputRef={traceabilityInputRef}
       />
       <MeasurementCard
         onClear={handleClear}
