@@ -27,6 +27,22 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const pool = await sql.connect();
+    await pool.request()
+      .input('id', sql.Int, id)
+      .input('name', sql.NVarChar, name)
+      .query('UPDATE Templates SET Name = @name WHERE ID = @id');
+    res.status(200).json({ id, name });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error updating template' });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;

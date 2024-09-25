@@ -15,7 +15,7 @@ const initialMeasurements = {
   D2: Array(4).fill('')
 };
 
-const MeasurementForm = () => {
+const MeasurementForm = ({ template, inspectorName }) => {
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errors, setErrors] = useState({});
@@ -25,22 +25,20 @@ const MeasurementForm = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: savedMeasurements } = useQuery({
-    queryKey: ['measurements'],
-    queryFn: () => JSON.parse(localStorage.getItem('measurements')) || initialMeasurements,
-  });
-
   useEffect(() => {
-    if (savedMeasurements) {
-      setMeasurements(savedMeasurements);
+    if (template) {
+      setMeasurements(prevMeasurements => ({
+        ...prevMeasurements,
+        ...template.measurements,
+        inspectorName: inspectorName || ''
+      }));
     }
     traceabilityInputRef.current?.focus();
-  }, [savedMeasurements]);
+  }, [template, inspectorName]);
 
   const saveMutation = useMutation({
     mutationFn: async (newMeasurements) => {
       const response = await axios.post(`${API_URL}/measurements`, newMeasurements);
-      localStorage.setItem('measurements', JSON.stringify(newMeasurements));
       return response.data;
     },
     onSuccess: () => {
@@ -88,7 +86,7 @@ const MeasurementForm = () => {
   };
 
   const handleClear = () => {
-    setMeasurements(initialMeasurements);
+    setMeasurements({...initialMeasurements, inspectorName});
     setErrors({});
     traceabilityInputRef.current?.focus();
   };
@@ -108,10 +106,8 @@ const MeasurementForm = () => {
     if (section === 'traceabilityCode') {
       inspectorNameInputRef.current?.focus();
     } else if (section === 'inspectorName') {
-      // Focus on the first input of D1
       document.querySelector('input[name="D1-0"]')?.focus();
     } else if (section === 'D1') {
-      // Focus on the first input of D2
       document.querySelector('input[name="D2-0"]')?.focus();
     } else if (section === 'D2') {
       saveButtonRef.current?.focus();
@@ -120,7 +116,7 @@ const MeasurementForm = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-center mb-6">แบบฟอร์มตรวจสอบ</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">แบบฟอร์มตรวจสอบ - {template?.name}</h2>
       <TraceabilityInspectorFields
         measurements={measurements}
         handleInputChange={handleInputChange}

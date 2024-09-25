@@ -11,6 +11,7 @@ const API_URL = 'http://localhost:5000/api';
 
 const TemplateManagement = () => {
   const [newTemplateName, setNewTemplateName] = useState('');
+  const [editingTemplate, setEditingTemplate] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: templates, isLoading } = useQuery({
@@ -28,6 +29,16 @@ const TemplateManagement = () => {
     onError: () => toast.error('Failed to create template'),
   });
 
+  const updateTemplateMutation = useMutation({
+    mutationFn: (template) => axios.put(`${API_URL}/templates/${template.id}`, template),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['templates']);
+      toast.success('Template updated successfully');
+      setEditingTemplate(null);
+    },
+    onError: () => toast.error('Failed to update template'),
+  });
+
   const deleteTemplateMutation = useMutation({
     mutationFn: (id) => axios.delete(`${API_URL}/templates/${id}`),
     onSuccess: () => {
@@ -40,6 +51,12 @@ const TemplateManagement = () => {
   const handleCreateTemplate = () => {
     if (newTemplateName.trim()) {
       createTemplateMutation.mutate(newTemplateName);
+    }
+  };
+
+  const handleUpdateTemplate = () => {
+    if (editingTemplate && editingTemplate.name.trim()) {
+      updateTemplateMutation.mutate(editingTemplate);
     }
   };
 
@@ -71,8 +88,25 @@ const TemplateManagement = () => {
         <ul className="space-y-2">
           {templates?.map((template) => (
             <li key={template.id} className="flex items-center justify-between bg-gray-100 p-2 rounded">
-              <span>{template.name}</span>
+              {editingTemplate && editingTemplate.id === template.id ? (
+                <Input
+                  type="text"
+                  value={editingTemplate.name}
+                  onChange={(e) => setEditingTemplate({ ...editingTemplate, name: e.target.value })}
+                />
+              ) : (
+                <span>{template.name}</span>
+              )}
               <div>
+                {editingTemplate && editingTemplate.id === template.id ? (
+                  <Button variant="outline" size="sm" onClick={handleUpdateTemplate}>
+                    Save
+                  </Button>
+                ) : (
+                  <Button variant="ghost" size="sm" onClick={() => setEditingTemplate(template)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" onClick={() => handleDeleteTemplate(template.id)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
