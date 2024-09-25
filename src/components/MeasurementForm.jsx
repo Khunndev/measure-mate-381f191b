@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Input } from '@/components/ui/input';
 import MeasurementInputs from './MeasurementInputs';
 import MeasurementCard from './MeasurementCard';
+import TraceabilityInspectorFields from './TraceabilityInspectorFields';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -103,43 +103,19 @@ const MeasurementForm = () => {
   };
 
   return (
-    <MeasurementCard
-      onClear={handleClear}
-      onSave={handleSave}
-      showConfirmDialog={showConfirmDialog}
-      setShowConfirmDialog={setShowConfirmDialog}
-      confirmSave={confirmSave}
-    >
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-4">
-          <div className="flex flex-col space-y-2">
-            <label className="text-lg font-semibold">Traceability code</label>
-            <Input
-              type="text"
-              name="traceabilityCode"
-              value={measurements.traceabilityCode}
-              onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
-              placeholder="Enter traceability code"
-              className={errors.traceabilityCode ? 'border-red-500' : ''}
-              ref={traceabilityInputRef}
-            />
-            {errors.traceabilityCode && <p className="text-red-500 text-sm">{errors.traceabilityCode}</p>}
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label className="text-lg font-semibold">ชื่อผู้ตรวจ</label>
-            <Input
-              type="text"
-              name="inspectorName"
-              value={measurements.inspectorName}
-              onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
-              placeholder="กรอกชื่อผู้ตรวจ"
-              className={errors.inspectorName ? 'border-red-500' : ''}
-            />
-            {errors.inspectorName && <p className="text-red-500 text-sm">{errors.inspectorName}</p>}
-          </div>
-        </div>
-
+    <div className="space-y-6">
+      <TraceabilityInspectorFields
+        measurements={measurements}
+        handleInputChange={handleInputChange}
+        errors={errors}
+      />
+      <MeasurementCard
+        onClear={handleClear}
+        onSave={handleSave}
+        showConfirmDialog={showConfirmDialog}
+        setShowConfirmDialog={setShowConfirmDialog}
+        confirmSave={confirmSave}
+      >
         <div className="grid grid-cols-2 gap-6">
           <div>
             <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
@@ -166,8 +142,8 @@ const MeasurementForm = () => {
             />
           </div>
         </div>
-      </div>
-    </MeasurementCard>
+      </MeasurementCard>
+    </div>
   );
 };
 
