@@ -21,6 +21,7 @@ const initialMeasurements = {
 const MeasurementForm = () => {
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [errors, setErrors] = useState({});
   const saveButtonRef = useRef(null);
   const traceabilityInputRef = useRef(null);
 
@@ -56,23 +57,49 @@ const MeasurementForm = () => {
     },
   });
 
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!measurements.traceabilityCode.trim()) {
+      newErrors.traceabilityCode = 'Traceability code is required';
+    }
+    if (!measurements.inspectorName.trim()) {
+      newErrors.inspectorName = 'Inspector name is required';
+    }
+    ['D1', 'D2'].forEach(section => {
+      measurements[section].forEach((value, index) => {
+        if (value && (isNaN(value) || value < 0)) {
+          newErrors[`${section}-${index}`] = 'Must be a positive number';
+        }
+      });
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleInputChange = (section, index, value) => {
     if (section === 'traceabilityCode' || section === 'inspectorName') {
       setMeasurements(prev => ({ ...prev, [section]: value }));
+      setErrors(prev => ({ ...prev, [section]: '' }));
     } else if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setMeasurements(prev => ({
         ...prev,
         [section]: prev[section].map((v, i) => i === index ? value : v)
       }));
+      setErrors(prev => ({ ...prev, [`${section}-${index}`]: '' }));
     }
   };
 
   const handleClear = () => {
     setMeasurements(initialMeasurements);
+    setErrors({});
     traceabilityInputRef.current?.focus();
   };
 
-  const handleSave = () => setShowConfirmDialog(true);
+  const handleSave = () => {
+    if (validateInputs()) {
+      setShowConfirmDialog(true);
+    }
+  };
 
   const confirmSave = () => {
     saveMutation.mutate(measurements);
@@ -81,11 +108,11 @@ const MeasurementForm = () => {
 
   return (
     <Card className="shadow-lg">
-      <CardContent className="p-6">
-        <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/2 pr-4 flex flex-col">
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex flex-col lg:flex-row">
+          <div className="lg:w-1/2 lg:pr-4 mb-6 lg:mb-0">
             <h3 className="text-xl font-semibold mb-4 text-center">รูปชิ้นงาน</h3>
-            <div className="flex-grow flex items-start justify-center">
+            <div className="flex items-center justify-center">
               <img 
                 src="/FT.png" 
                 alt="รูปตรวจชิ้นงาน" 
@@ -93,30 +120,32 @@ const MeasurementForm = () => {
               />
             </div>
           </div>
-          <div className="md:w-1/2 pl-4 space-y-6">
-            <div className="flex items-center space-x-4">
-              <label className="w-40 text-lg font-semibold">Traceability code</label>
+          <div className="lg:w-1/2 lg:pl-4 space-y-6">
+            <div className="flex flex-col space-y-2">
+              <label className="text-lg font-semibold">Traceability code</label>
               <Input
                 type="text"
                 name="traceabilityCode"
                 value={measurements.traceabilityCode}
                 onChange={(e) => handleInputChange('traceabilityCode', null, e.target.value)}
                 placeholder="Enter traceability code"
-                className="flex-grow"
+                className={errors.traceabilityCode ? 'border-red-500' : ''}
                 ref={traceabilityInputRef}
               />
+              {errors.traceabilityCode && <p className="text-red-500 text-sm">{errors.traceabilityCode}</p>}
             </div>
 
-            <div className="flex items-center space-x-4">
-              <label className="w-40 text-lg font-semibold">ชื่อผู้ตรวจ</label>
+            <div className="flex flex-col space-y-2">
+              <label className="text-lg font-semibold">ชื่อผู้ตรวจ</label>
               <Input
                 type="text"
                 name="inspectorName"
                 value={measurements.inspectorName}
                 onChange={(e) => handleInputChange('inspectorName', null, e.target.value)}
                 placeholder="กรอกชื่อผู้ตรวจ"
-                className="flex-grow"
+                className={errors.inspectorName ? 'border-red-500' : ''}
               />
+              {errors.inspectorName && <p className="text-red-500 text-sm">{errors.inspectorName}</p>}
             </div>
             
             <div className="space-y-6">
@@ -124,22 +153,24 @@ const MeasurementForm = () => {
                 section="D1"
                 measurements={measurements}
                 handleInputChange={handleInputChange}
+                errors={errors}
               />
               <MeasurementInputs
                 section="D2"
                 measurements={measurements}
                 handleInputChange={handleInputChange}
+                errors={errors}
               />
             </div>
           </div>
         </div>
       </CardContent>
       
-      <CardFooter className="flex justify-center space-x-4 p-6">
-        <Button variant="outline" onClick={handleClear} className="w-32">
+      <CardFooter className="flex justify-center space-x-4 p-4 sm:p-6">
+        <Button variant="outline" onClick={handleClear} className="w-full sm:w-32">
           <Trash2 className="mr-2 h-4 w-4" /> Clear
         </Button>
-        <Button onClick={handleSave} ref={saveButtonRef} className="w-32 bg-primary hover:bg-primary-dark">
+        <Button onClick={handleSave} ref={saveButtonRef} className="w-full sm:w-32 bg-primary hover:bg-primary-dark">
           <Save className="mr-2 h-4 w-4" /> Save
         </Button>
       </CardFooter>
