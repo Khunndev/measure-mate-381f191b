@@ -9,6 +9,7 @@ import Templates from "./pages/Templates";
 import Settings from "./pages/Settings";
 import MeasurementForm from "./pages/MeasurementForm";
 import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
 
 const queryClient = new QueryClient();
 
@@ -27,27 +28,34 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <BrowserRouter>
-          {user && <Navbar />}
-          <div className={user ? "pt-16" : ""}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/"
-                element={user ? <Navigate to="/measurement" replace /> : <Navigate to="/login" replace />}
-              />
-              <Route
-                path="/measurement"
-                element={user ? <MeasurementForm /> : <Navigate to="/login" replace />}
-              />
-              <Route
-                path="/templates"
-                element={user ? <Templates /> : <Navigate to="/login" replace />}
-              />
-              <Route
-                path="/settings"
-                element={user ? <Settings /> : <Navigate to="/login" replace />}
-              />
-            </Routes>
+          <div className="flex h-screen bg-gray-100">
+            {user && <Sidebar />}
+            <div className="flex-1 flex flex-col overflow-hidden">
+              {user && <Navbar />}
+              <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+                <div className="container mx-auto px-6 py-8">
+                  <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                      path="/"
+                      element={user ? <Navigate to="/measurement" replace /> : <Navigate to="/login" replace />}
+                    />
+                    <Route
+                      path="/measurement"
+                      element={user ? <MeasurementForm /> : <Navigate to="/login" replace />}
+                    />
+                    <Route
+                      path="/templates"
+                      element={user ? <Templates /> : <Navigate to="/login" replace />}
+                    />
+                    <Route
+                      path="/settings"
+                      element={user ? <Settings /> : <Navigate to="/login" replace />}
+                    />
+                  </Routes>
+                </div>
+              </main>
+            </div>
           </div>
         </BrowserRouter>
       </TooltipProvider>
