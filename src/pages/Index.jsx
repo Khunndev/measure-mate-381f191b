@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import MeasurementForm from '../components/MeasurementForm';
-import Navbar from '../components/Navbar';
-import TemplateManagement from '../components/TemplateManagement';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchTemplates } from '../mockApi/mockApi';
 
@@ -27,7 +25,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <Navbar />
       <div className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">Measure Mate</h1>
@@ -51,10 +48,6 @@ const Index = () => {
           {selectedTemplate && (
             <MeasurementForm template={selectedTemplate} inspectorName={user?.username} />
           )}
-
-          <div className="mt-12">
-            <TemplateManagement />
-          </div>
         </div>
       </div>
     </div>
