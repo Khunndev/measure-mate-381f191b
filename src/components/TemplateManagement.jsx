@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, Edit, Plus } from 'lucide-react';
 import { fetchTemplates, createTemplate, updateTemplate, deleteTemplate } from '../mockApi/mockApi';
 
-const TemplateManagement = () => {
+const TemplateManagement = ({ onEditTemplate }) => {
   const [newTemplateName, setNewTemplateName] = useState('');
   const [editingTemplate, setEditingTemplate] = useState(null);
   const queryClient = useQueryClient();
@@ -101,9 +101,14 @@ const TemplateManagement = () => {
                     Save
                   </Button>
                 ) : (
-                  <Button variant="ghost" size="sm" onClick={() => setEditingTemplate(template)}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
+                  <>
+                    <Button variant="ghost" size="sm" onClick={() => setEditingTemplate(template)}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => onEditTemplate(template)}>
+                      Edit Form
+                    </Button>
+                  </>
                 )}
                 <Button variant="ghost" size="sm" onClick={() => handleDeleteTemplate(template.id)}>
                   <Trash2 className="h-4 w-4" />
