@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-
-const API_URL = 'http://localhost:5000/api';
+import { login } from '../mockApi/mockApi';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -15,9 +13,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
-    mutationFn: (credentials) => axios.post(`${API_URL}/auth/login`, credentials),
+    mutationFn: (credentials) => login(credentials.username, credentials.password),
     onSuccess: (response) => {
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('user', JSON.stringify(response.user));
       toast.success('Login successful');
       navigate('/');
     },
@@ -32,7 +30,6 @@ const Login = () => {
   };
 
   const handleBypass = () => {
-    // Simulate a successful login
     const mockUser = { id: 'temp', username: 'Temporary User' };
     localStorage.setItem('user', JSON.stringify(mockUser));
     navigate('/');

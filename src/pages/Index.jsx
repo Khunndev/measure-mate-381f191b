@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import MeasurementForm from '../components/MeasurementForm';
 import Navbar from '../components/Navbar';
 import TemplateManagement from '../components/TemplateManagement';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const API_URL = 'http://localhost:5000/api';
+import { fetchTemplates } from '../mockApi/mockApi';
 
 const Index = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -19,7 +17,7 @@ const Index = () => {
 
   const { data: templates, isLoading } = useQuery({
     queryKey: ['templates'],
-    queryFn: () => axios.get(`${API_URL}/templates`).then(res => res.data),
+    queryFn: fetchTemplates,
   });
 
   const handleTemplateChange = (templateId) => {

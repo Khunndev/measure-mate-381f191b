@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, Edit, Plus } from 'lucide-react';
-
-const API_URL = 'http://localhost:5000/api';
+import { fetchTemplates, createTemplate, updateTemplate, deleteTemplate } from '../mockApi/mockApi';
 
 const TemplateManagement = () => {
   const [newTemplateName, setNewTemplateName] = useState('');
@@ -16,11 +14,11 @@ const TemplateManagement = () => {
 
   const { data: templates, isLoading } = useQuery({
     queryKey: ['templates'],
-    queryFn: () => axios.get(`${API_URL}/templates`).then(res => res.data),
+    queryFn: fetchTemplates,
   });
 
   const createTemplateMutation = useMutation({
-    mutationFn: (name) => axios.post(`${API_URL}/templates`, { name }),
+    mutationFn: createTemplate,
     onSuccess: () => {
       queryClient.invalidateQueries(['templates']);
       toast.success('Template created successfully');
@@ -30,7 +28,7 @@ const TemplateManagement = () => {
   });
 
   const updateTemplateMutation = useMutation({
-    mutationFn: (template) => axios.put(`${API_URL}/templates/${template.id}`, template),
+    mutationFn: (template) => updateTemplate(template.id, template.name),
     onSuccess: () => {
       queryClient.invalidateQueries(['templates']);
       toast.success('Template updated successfully');
@@ -40,7 +38,7 @@ const TemplateManagement = () => {
   });
 
   const deleteTemplateMutation = useMutation({
-    mutationFn: (id) => axios.delete(`${API_URL}/templates/${id}`),
+    mutationFn: deleteTemplate,
     onSuccess: () => {
       queryClient.invalidateQueries(['templates']);
       toast.success('Template deleted successfully');

@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import MeasurementInputs from './MeasurementInputs';
 import MeasurementCard from './MeasurementCard';
 import TraceabilityInspectorFields from './TraceabilityInspectorFields';
-import axios from 'axios';
 import { toast } from 'sonner';
-
-const API_URL = 'http://localhost:5000/api';
+import { saveMeasurement } from '../mockApi/mockApi';
 
 const initialMeasurements = {
   traceabilityCode: '',
@@ -37,10 +35,7 @@ const MeasurementForm = ({ template, inspectorName }) => {
   }, [template, inspectorName]);
 
   const saveMutation = useMutation({
-    mutationFn: async (newMeasurements) => {
-      const response = await axios.post(`${API_URL}/measurements`, newMeasurements);
-      return response.data;
-    },
+    mutationFn: saveMeasurement,
     onSuccess: () => {
       queryClient.invalidateQueries(['measurements']);
       toast.success('Measurements saved successfully');
