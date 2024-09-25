@@ -13,7 +13,7 @@ const initialMeasurements = {
   D2: Array(4).fill('')
 };
 
-const MeasurementForm = ({ template, inspectorName }) => {
+const MeasurementForm = ({ template, inspectorName, focusTraceability }) => {
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errors, setErrors] = useState({});
@@ -31,8 +31,10 @@ const MeasurementForm = ({ template, inspectorName }) => {
         inspectorName: inspectorName || ''
       }));
     }
-    traceabilityInputRef.current?.focus();
-  }, [template, inspectorName]);
+    if (focusTraceability) {
+      traceabilityInputRef.current?.focus();
+    }
+  }, [template, inspectorName, focusTraceability]);
 
   const saveMutation = useMutation({
     mutationFn: saveMeasurement,

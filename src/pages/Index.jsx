@@ -7,6 +7,7 @@ import { fetchTemplates } from '../mockApi/mockApi';
 const Index = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [user, setUser] = useState(null);
+  const [focusTraceability, setFocusTraceability] = useState(false);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -21,7 +22,14 @@ const Index = () => {
   const handleTemplateChange = (templateId) => {
     const selected = templates.find(t => t.id === templateId);
     setSelectedTemplate(selected);
+    setFocusTraceability(true);
   };
+
+  useEffect(() => {
+    if (focusTraceability) {
+      setFocusTraceability(false);
+    }
+  }, [focusTraceability]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -46,7 +54,11 @@ const Index = () => {
           </div>
 
           {selectedTemplate && (
-            <MeasurementForm template={selectedTemplate} inspectorName={user?.username} />
+            <MeasurementForm 
+              template={selectedTemplate} 
+              inspectorName={user?.username} 
+              focusTraceability={focusTraceability}
+            />
           )}
         </div>
       </div>
